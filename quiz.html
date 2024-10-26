@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Change Quiz</title>
+    <link rel="stylesheet" href="quiz.css">
+   
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="card">
+            <h1>Climate Change Quiz</h1>
+            <div class="quiz-box">
+                <div id="question-container">
+                    <h2 id="question"></h2>
+                    <ul id="options"></ul>
+                </div>
+                <button id="next-button" class="btn hidden">Next</button>
+                <p id="score" class="score hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const quizzes = [
+        {
+            question: 'Which gas is primarily responsible for climate change?',
+            options: ['Carbon Dioxide', 'Nitrogen', 'Oxygen', 'Methane'],
+            correctAnswer: 'Carbon Dioxide',
+        },
+        {
+            question: 'What is the main human activity causing climate change?',
+            options: ['Deforestation', 'Fossil Fuel Use', 'Agriculture', 'Transportation'],
+            correctAnswer: 'Fossil Fuel Use',
+        },
+        {
+            question: 'Which effect is caused by rising global temperatures?',
+            options: ['Ocean acidification', 'Deforestation', 'Desertification', 'All of the above'],
+            correctAnswer: 'All of the above',
+        },
+        {
+            question: 'What is the role of renewable energy in fighting climate change?',
+            options: [
+                'It produces more emissions',
+                'It helps reduce greenhouse gases',
+                'It causes deforestation',
+                'It has no impact',
+            ],
+            correctAnswer: 'It helps reduce greenhouse gases',
+        },
+        {
+            question: 'Which international agreement aims to limit global warming?',
+            options: ['Kyoto Protocol', 'Paris Agreement', 'Geneva Convention', 'Montreal Protocol'],
+            correctAnswer: 'Paris Agreement',
+        },
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedAnswer = '';
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const nextButton = document.getElementById('next-button');
+    const scoreEl = document.getElementById('score');
+
+    // Create an error message element
+    const errorEl = document.createElement('p');
+    errorEl.id = 'error-message';
+    errorEl.style.color = 'red';
+    errorEl.style.display = 'none';
+    errorEl.innerText = 'Please select an answer!';
+    document.querySelector('.quiz-box').appendChild(errorEl);
+
+    // Function to display questions
+    function displayQuestion() {
+        const currentQuiz = quizzes[currentQuestion];
+        questionEl.innerHTML = currentQuiz.question;
+        optionsEl.innerHTML = '';
+        errorEl.style.display = 'none'; // Hide error message
+        currentQuiz.options.forEach((option) => {
+            const li = document.createElement('li');
+            const button = document.createElement('button');
+            button.innerHTML = option;
+            button.onclick = () => {
+                selectedAnswer = option;
+                clearSelection();
+                button.classList.add('selected');
+            };
+            li.appendChild(button);
+            optionsEl.appendChild(li);
+        });
+        nextButton.classList.remove('hidden');
+    }
+
+    // Function to clear selected option
+    function clearSelection() {
+        const buttons = optionsEl.getElementsByTagName('button');
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('selected');
+        }
+    }
+
+    // Handle next question
+    function handleNextQuestion() {
+        if (!selectedAnswer) {
+            // Show error message if no option selected
+            errorEl.style.display = 'block';
+            return;
+        }
+        if (selectedAnswer === quizzes[currentQuestion].correctAnswer) {
+            score++;
+        }
+        currentQuestion++;
+        selectedAnswer = '';
+        if (currentQuestion < quizzes.length) {
+            displayQuestion();
+        } else {
+            displayResult();
+        }
+    }
+
+    // Display final result
+    function displayResult() {
+        questionEl.innerHTML = 'Quiz Completed!';
+        optionsEl.innerHTML = '';
+        scoreEl.innerHTML = ⁠ Your Score: ${score} / ${quizzes.length} ⁠;
+        scoreEl.classList.remove('hidden');
+        nextButton.classList.add('hidden');
+    }
+
+    nextButton.addEventListener('click', handleNextQuestion);
+    displayQuestion();
+});
+
+    </script>
+</body>
+</html>
